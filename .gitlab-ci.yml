@@ -1,0 +1,12 @@
+stages:
+  - build
+  - package
+  - push
+
+build-binary:
+    image: golang:1.22.0-alpine
+    stage: build
+    script:
+        - apk add --no-cache git
+        - git --version
+        
