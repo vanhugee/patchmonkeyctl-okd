@@ -4,6 +4,7 @@ RUN apk add --no-cache git
 RUN git --version
 RUN git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
 RUN cd patchmonkeyctl
+RUN ls -l
 RUN mkdir -p ./bin
 RUN pwd
 RUN ls -l
