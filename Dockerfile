@@ -3,9 +3,10 @@ WORKDIR /app
 RUN apk add --no-cache git
 RUN git --version
 RUN git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
+RUN mkdir -p bin
 RUN tree
 RUN pwd
 RUN ls -l
 RUN cd patchmonkeyctl
-RUN go build -o ./cmd/patchmonkeyctl
+# RUN go build -o  ./cmd/patchmonkeyctl
 # FROM gcr.io/distroless/static-debian12
