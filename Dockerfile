@@ -1,7 +1,7 @@
 FROM golang:1.22.0-alpine
 WORKDIR /app
 RUN apk add --no-cache git && \
-    git status && \
+    git --version && \
     git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
 RUN mkdir -p bin && \
     pwd && \
