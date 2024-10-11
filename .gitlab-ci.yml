@@ -12,7 +12,6 @@ build-binary:
         - cd patchmonkeyctl
         - mkdir -p ./bin
         - go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
-        - mv patchmon
     artifacts:
       paths:
         - patchmonkeyctl/bin/patchmonkeyctl 
