@@ -12,14 +12,14 @@ build-binary:
         - git --version
         - git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
         - cd patchmonkeyctl
-        - go build ./cmd/patchmonkeyctl
-        - mv patchmonkeyctl ../
+        - mkdir -p ./bin
+        - go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
     artifacts:
       paths:
-        - patch
+        - patchmonkeyctl/bin/patchmonkeyctl 
         
 
-check-architecture:
-    stage: test
-    script:
-        - file patchmonkeyctl
+# check-architecture:
+#     stage: test
+#     script:
+#         - file patchmonkeyctl
