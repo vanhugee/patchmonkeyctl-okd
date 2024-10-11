@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - package
   - push
 
@@ -11,5 +12,14 @@ build-binary:
         - git --version
         - git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
         - cd patchmonkeyctl
-        - ls -la
+        - go build ./cmd/patchmonkeyctl
+        - mv patchmonkeyctl ../
+    artifacts:
+      paths:
+        - patch
         
+
+check-architecture:
+    stage: test
+    script:
+        - file patchmonkeyctl
