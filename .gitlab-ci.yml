@@ -1,8 +1,6 @@
 stages:
   - build
-  - test
   - package
-  - push
 
 build-binary:
     image: golang:1.22.0-alpine
@@ -14,14 +12,28 @@ build-binary:
         - cd patchmonkeyctl
         - mkdir -p ./bin
         - go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
-        - pwd
-        - file patchmonkeyctl/bin/patchmonkeyctl 
+        - ls -la ./bin
     artifacts:
       paths:
         - patchmonkeyctl/bin/patchmonkeyctl 
         
-
-# check-architecture:
-#     stage: test
-#     script:
-#         - file patchmonkeyctl
+package_image:
+  image: docker:cli
+  stage: package
+  dependencies:
+    - build-binary
+  services:
+    - name: docker:dind
+      command: ["--registry-mirror", "https://pull-through.cloud.duke.edu/"]
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker info
+    - echo $DOCKER_HOST
+  script:
+    - mkdir /app
+    - mv patchmonkeyctl /app/
+    - echo 'FROM ubuntu:24.10' > Dockerfile
+    - echo 'WORKDIR /app' >> Dockerfile
+    - echo 'COPY ./patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
+    - echo 'CMD ["/app/patchmonkeyctl"]' >> Dockerfile
+    - docker build -t patchmonkey:latest .
