@@ -7,7 +7,3 @@ RUN tree
 RUN pwd
 RUN ls -l
 RUN cd patchmonkeyctl
-
-
-
-
