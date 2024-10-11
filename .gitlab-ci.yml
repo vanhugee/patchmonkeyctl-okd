@@ -12,7 +12,7 @@ build-binary:
         - cd patchmonkeyctl
         - mkdir -p ./bin
         - go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
-        - ls -la ./bin
+        - mv patchmon
     artifacts:
       paths:
         - patchmonkeyctl/bin/patchmonkeyctl 
@@ -33,6 +33,7 @@ package_image:
     - mkdir /app
     - pwd
     - ls
+    - ./patchmonkeyctl/bin/patchmonkeyctl --help   # Example command to test the executable
     # - echo 'FROM ubuntu:24.10' > Dockerfile
     # - echo 'WORKDIR /app' >> Dockerfile
     # - echo 'COPY ./patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
