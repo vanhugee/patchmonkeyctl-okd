@@ -7,3 +7,5 @@ RUN tree
 RUN pwd
 RUN ls -l
 RUN cd patchmonkeyctl
+RUN go build -o patchmonkeyctl
+# FROM gcr.io/distroless/static-debian12
