@@ -32,9 +32,9 @@ package_image:
     - mkdir /app
     - pwd
     - ls
-    - ./patchmonkeyctl/bin/patchmonkeyctl --help   # Example command to test the executable
-    # - echo 'FROM ubuntu:24.10' > Dockerfile
-    # - echo 'WORKDIR /app' >> Dockerfile
-    # - echo 'COPY ./patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
-    # - echo 'CMD ["/app/patchmonkeyctl"]' >> Dockerfile
-    # - docker build -t patchmonkey:latest .
+    # - ./patchmonkeyctl/bin/patchmonkeyctl --help
+    - echo 'FROM ubuntu:24.10' > Dockerfile
+    - echo 'WORKDIR /app' >> Dockerfile
+    - echo 'COPY ./patchmonkeyctl/bin/patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
+    - echo 'CMD ["/app/patchmonkeyctl"]' >> Dockerfile
+    - docker build -t patchmonkey:latest .
