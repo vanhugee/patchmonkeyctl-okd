@@ -31,9 +31,10 @@ package_image:
     - echo $DOCKER_HOST
   script:
     - mkdir /app
-    - mv patchmonkeyctl /app/
-    - echo 'FROM ubuntu:24.10' > Dockerfile
-    - echo 'WORKDIR /app' >> Dockerfile
-    - echo 'COPY ./patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
-    - echo 'CMD ["/app/patchmonkeyctl"]' >> Dockerfile
-    - docker build -t patchmonkey:latest .
+    - pwd
+    - ls
+    # - echo 'FROM ubuntu:24.10' > Dockerfile
+    # - echo 'WORKDIR /app' >> Dockerfile
+    # - echo 'COPY ./patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
+    # - echo 'CMD ["/app/patchmonkeyctl"]' >> Dockerfile
+    # - docker build -t patchmonkey:latest .
