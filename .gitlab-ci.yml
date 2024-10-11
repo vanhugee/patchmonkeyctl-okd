@@ -1,5 +1,5 @@
 stages:
-  - build
+  # - build
   - package
 
 # build-binary:
@@ -19,8 +19,8 @@ stages:
 package_image:
   image: docker:cli
   stage: package
-  dependencies:
-    - build-binary
+  # dependencies:
+  #   - build-binary
   services:
     - name: docker:dind
       command: ["--registry-mirror", "https://pull-through.cloud.duke.edu/"]
