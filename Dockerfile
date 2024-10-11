@@ -4,8 +4,11 @@ RUN apk add --no-cache git && \
     git --version && \
     git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
 RUN mkdir -p bin && \
-    pwd && \
+    cd patchmonkeyctl && \     
+    go build -o ../bin/patchmonkeyctl  ./cmd/patchmonkeyctl && \
+    cd .. && \
     tree
+
 
 
 # RUN go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
