@@ -9,4 +9,7 @@ build-binary:
     script:
         - apk add --no-cache git
         - git --version
+        - git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
+        - cd patchmonkeyctl
+        - ls -la
         
