@@ -15,7 +15,7 @@ build-binary:
         - mkdir -p ./bin
         - go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
         - pwd
-        - file ./bin/patchmonkeyctl
+        - file patchmonkeyctl/bin/patchmonkeyctl 
     artifacts:
       paths:
         - patchmonkeyctl/bin/patchmonkeyctl 
