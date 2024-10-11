@@ -36,6 +36,6 @@ package_image:
     - echo 'FROM ubuntu:24.10' > Dockerfile
     - echo 'WORKDIR /app' >> Dockerfile
     - echo 'COPY ./patchmonkeyctl/bin/patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
-    - echo 'CMD ["./app/patchmonkeyctl"]' >> Dockerfile
+    - echo 'CMD ["/app/patchmonkeyctl --help"]' >> Dockerfile
     - docker build -t gitlab-registry.oit.duke.edu/vn74/patchmoney-docker .
     - docker push gitlab-registry.oit.duke.edu/vn74/patchmoney-docker
