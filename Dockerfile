@@ -9,5 +9,5 @@ RUN mkdir -p bin && \
 
 FROM gcr.io/distroless/static-debian12
 COPY --from=golang /app/bin/patchmonkeyctl .
-RUN pwd && ls -l
+RUN pwd
 
