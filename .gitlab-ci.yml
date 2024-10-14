@@ -1,26 +1,9 @@
 stages:
-  # - build
   - package
 
-# build-binary:
-#     image: golang:1.22.0-alpine
-#     stage: build
-#     script:
-#         - apk add --no-cache git
-#         - git --version
-#         - git clone https://gitlab.oit.duke.edu/devil-ops/patchmonkeyctl.git
-#         - cd patchmonkeyctl
-#         - mkdir -p ./bin
-#         - go build -o ./bin/patchmonkeyctl  ./cmd/patchmonkeyctl
-#     artifacts:
-#       paths:
-#         - patchmonkeyctl/bin/patchmonkeyctl 
-        
 package_image:
   image: docker:cli
   stage: package
-  # dependencies:
-  #   - build-binary
   services:
     - name: docker:dind
       command: ["--registry-mirror", "https://pull-through.cloud.duke.edu/"]
@@ -32,10 +15,5 @@ package_image:
     - pwd
     - ls
     - tree
-    # - ./patchmonkeyctl/bin/patchmonkeyctl --help
-    # - echo 'FROM ubuntu:24.10' > Dockerfile
-    # - echo 'WORKDIR /app' >> Dockerfile
-    # - echo 'COPY ./patchmonkeyctl/bin/patchmonkeyctl /app/patchmonkeyctl' >> Dockerfile
-    # - echo 'CMD ["/app/patchmonkeyctl --help"]' >> Dockerfile
     - docker build -t gitlab-registry.oit.duke.edu/vn74/patchmoney-docker .
     - docker push gitlab-registry.oit.duke.edu/vn74/patchmoney-docker
