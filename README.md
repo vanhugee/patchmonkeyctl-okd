@@ -27,8 +27,8 @@ Within the `DeploymentConfig` YAML, under the `containers` section, include the 
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  namespace: demo-namespace  #This should be your name space
-  name: patchmonkeyctl       #For simplicity, the names of the sample for deploymentconfig, service, and route will be patchmonkeyctl
+  namespace: demo-namespace  
+  name: patchmonkeyctl
 spec:
   selector:
     app: patchmonkeyctl
@@ -44,6 +44,12 @@ spec:
           imagePullPolicy: Always
           command:
             - ./patchmonkeyctl
+          env:
+            - name: TOKEN          
+              valueFrom:
+                secretKeyRef:            # The authentication token should be created 
+                  name: auth-token       # manually in OKD as a secret
+                  key: auth-token
           args:
             - prometheus-exporter
             - '--token'
