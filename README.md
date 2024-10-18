@@ -24,18 +24,47 @@ In OKD, start by creating a secret to store the authentication token. Next, crea
 Within the `DeploymentConfig` YAML, under the `containers` section, include the following configuration to run the Prometheus exporter and authenticate with the server using the injected token:
 
 ```yaml
-command:
-- ./patchmonkeyctl
-env:
-- name: <TOKEN_NAME>
-    valueFrom:
-    secretKeyRef:
-        name: <TOKEN_NAME>
-        key: <TOKEN_VALUE>
-args:
-- prometheus-exporter
-- '--token'
-- $(<TOKEN_NAME>)
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  namespace: demo-namespace  #This should be your name space
+  name: patchmonkeyctl       #For simplicity, the names of the sample for deploymentconfig, service, and route will be patchmonkeyctl
+spec:
+  selector:
+    app: patchmonkeyctl
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: patchmonkeyctl
+    spec:
+      containers:
+        - name: container
+          image: 'gitlab-registry.oit.duke.edu/vn74/patchmoney-docker:latest'
+          imagePullPolicy: Always
+          command:
+            - ./patchmonkeyctl
+          args:
+            - prometheus-exporter
+            - '--token'
+            - $(TOKEN)
+            - '--address'
+            - '0.0.0.0:9633'
+            - '--verbose'
+            - '--timestamps'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  triggers:
+    - type: ConfigChange
 ```
 Once the `DeploymentConfig` is up and running, you can verify that the patchmonkeyctl prometheus-exporter is working as expected by checking the logs of one of the pods. The logs should display output similar to the following:
 ```bash
