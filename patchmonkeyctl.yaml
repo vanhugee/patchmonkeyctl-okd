@@ -1,0 +1,114 @@
+# DeploymentConfig
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  namespace: patchmonkey-test
+  name: patchmonkeyctl
+spec:
+  selector:
+    app: patchmonkeyctl
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: patchmonkeyctl
+    spec:
+      containers:
+        - name: container
+          image: 'gitlab-registry.oit.duke.edu/vn74/patchmoney-docker:latest'
+          imagePullPolicy: Always
+          command:
+            - ./patchmonkeyctl
+          env:
+            - name: TOKEN          
+              valueFrom:
+                secretKeyRef:            # The authentication token should be created 
+                  name: auth-token       # manually in OKD as a secret.
+                  key: auth-token
+          args:
+            - prometheus-exporter
+            - '--token'
+            - $(TOKEN)
+            - '--address'
+            - '0.0.0.0:9633'
+            - '--verbose'
+            - '--timestamps'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9633                 # Under the current binary, this is the port that 
+            initialDelaySeconds: 10      # patchmonkey prometheus-exporter listen on.
+            periodSeconds: 15
+
+          readinessProbe:                # Configurations for the readiness probes are similar
+            httpGet:                     # to those for liveness probes.   
+              path: /metrics
+              port: 9633                 
+            initialDelaySeconds: 10      
+            periodSeconds: 15
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  triggers:
+    - type: ConfigChange
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: patchmonkeyctl
+  namespace: patchmonkey-test
+  labels:
+    app: patchmonkeyctl 
+spec:
+  selector:
+    app: patchmonkeyctl
+  ports:
+    - name: patchmonkeyctl        # This should be a named port for the monitoring service
+      protocol: TCP
+      port: 9633
+      targetPort: 9633            
+---
+# Route
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: patchmonkeyctl
+  namespace: patchmonkey-test
+  labels:
+    app: patchmonkeyctl
+spec:
+  to:
+    kind: Service
+    name: patchmonkeyctl
+  tls: {}
+  path: /metrics
+  port:
+    targetPort: 9633
+---
+# Monitoring Service
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: demo-servicemonitor
+  namespace: patchmonkey-test
+spec:
+  jobLabel: patchmonkeyctl
+  endpoints:
+      - path: /metrics
+        port: patchmonkeyctl.    # This should be the named port defined in the Service
+  namespaceSelector:
+    matchNames:
+        - patchmonkey-test
+  selector:
+    matchLabels:
+      app: patchmonkeyctl
+
+
